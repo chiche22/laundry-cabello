@@ -25,6 +25,7 @@ export default function CompleteRegisterPage() {
       setLoading(false)
       return
     }
+    setLoading(false)
     router.push("/calendar")
     router.refresh()
   }
@@ -37,7 +38,7 @@ export default function CompleteRegisterPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Departamento <span className="text-gray-400">(ej: 4B)</span>
+              Departamento <span className="text-gray-500">(ej: 4B)</span>
             </label>
             <input type="text" value={apartment} onChange={(e) => setApartment(e.target.value.toUpperCase())} required
               className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"

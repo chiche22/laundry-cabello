@@ -32,8 +32,13 @@ export default function RegisterPage() {
       setLoading(false)
       return
     }
-    await signIn("credentials", { email: form.email, password: form.password, redirect: false })
-    router.push("/calendar")
+    const signInRes = await signIn("credentials", { email: form.email, password: form.password, redirect: false })
+    setLoading(false)
+    if (signInRes?.ok) {
+      router.push("/calendar")
+    } else {
+      setError("Cuenta creada. Ingresá con tu email y contraseña.")
+    }
   }
 
   return (
@@ -81,7 +86,7 @@ export default function RegisterPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Departamento <span className="text-gray-400">(ej: 4B)</span>
+              Departamento <span className="text-gray-500">(ej: 4B)</span>
             </label>
             <input type="text" value={form.apartment} onChange={(e) => update("apartment", e.target.value.toUpperCase())} required
               className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
