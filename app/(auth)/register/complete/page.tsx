@@ -1,8 +1,10 @@
 "use client"
 import { useState } from "react"
+import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 export default function CompleteRegisterPage() {
+  const { update } = useSession()
   const router = useRouter()
   const [apartment, setApartment] = useState("")
   const [notifyBefore, setNotifyBefore] = useState(true)
@@ -14,20 +16,26 @@ export default function CompleteRegisterPage() {
     e.preventDefault()
     setError("")
     setLoading(true)
-    const res = await fetch("/api/profile", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ apartment, notifyBefore, notifyEnd }),
-    })
-    const data = await res.json()
-    if (!res.ok) {
-      setError(data.error)
+    try {
+      const res = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ apartment, notifyBefore, notifyEnd }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error ?? "No se pudo completar el perfil")
+        return
+      }
+
+      await update()
+      router.push("/calendar")
+      router.refresh()
+    } catch {
+      setError("No se pudo completar el perfil")
+    } finally {
       setLoading(false)
-      return
     }
-    setLoading(false)
-    router.push("/calendar")
-    router.refresh()
   }
 
   return (
