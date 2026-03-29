@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { DURATIONS, buildGoogleCalendarUrl } from "@/lib/bookings"
+import { DURATIONS, buildGoogleCalendarUrl } from "@/lib/booking-utils"
 import { format, addDays } from "date-fns"
 import { es } from "date-fns/locale"
 import { Suspense } from "react"
