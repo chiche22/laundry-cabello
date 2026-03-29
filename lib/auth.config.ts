@@ -15,12 +15,14 @@ export const authConfig: NextAuthConfig = {
 
       const publicPaths = ["/login", "/register", "/api/auth", "/api/register"]
       const isPublic = publicPaths.some((p) => pathname.startsWith(p))
+      // Nunca interceptar rutas de API con el proxy
+      const isApi = pathname.startsWith("/api/")
 
-      if (!isLoggedIn && !isPublic) return false
+      if (!isLoggedIn && !isPublic && !isApi) return false
       if (isLoggedIn && (pathname === "/login" || pathname === "/register")) {
         return Response.redirect(new URL("/calendar", nextUrl))
       }
-      if (isLoggedIn && !(auth?.user as any)?.apartment && pathname !== "/register/complete" && !isPublic) {
+      if (isLoggedIn && !(auth?.user as any)?.apartment && !isApi && pathname !== "/register/complete" && !isPublic) {
         return Response.redirect(new URL("/register/complete", nextUrl))
       }
       return true
