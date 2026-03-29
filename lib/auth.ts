@@ -13,14 +13,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     newUser: "/register/complete",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id
         token.apartment = (user as any).apartment
         token.isAdmin = (user as any).isAdmin
       }
-      // Refresh from DB on each request
-      if (token.id) {
+      // Solo refrescar desde DB cuando se actualiza el perfil explícitamente
+      if (trigger === "update" && token.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
           select: { apartment: true, isAdmin: true, name: true },
